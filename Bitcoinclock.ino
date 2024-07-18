@@ -10,11 +10,13 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <Fonts/Bitwise12pt7b.h>
+#include <Fonts/Bitwise9pt7b.h>
 
 ezButton button(2); // Define button on pin 2
 int currentTask = 0; // Initialize current task to 0
 unsigned long previousMillis = 0; // Initialize timer for current task
-const int taskDuration = 10000; // Set duration for each task to 10 seconds
+const int taskDuration = 10000; // Set duration for each task to 69 seconds
 String blocknumber_string;
 int blocknumber_old = 0;
 int blocknumber_new = 0;
@@ -28,7 +30,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 ESP8266WiFiMulti WiFiMulti;
 
-DigitLedDisplay ld = DigitLedDisplay(12, 15, 14);
+DigitLedDisplay ld = DigitLedDisplay(13, 15, 14);
 
 
 // Function for displaying the latest Bitcoin Price USD
@@ -39,10 +41,11 @@ void getbitcoinprice() {
   
   // Draw scrolling text "USD/BTC"
   display.clearDisplay();
-  display.setTextSize(2); // Draw 2X-scale text
+  display.setTextSize(1); // Draw 2X-scale text
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 15);
-  display.println(F("USD/BTC"));
+  display.setCursor(0, 25);
+  display.setFont(&Bitwise12pt7b);
+  display.println(F("Usd/Btc"));
   display.display();      // Show text
   // Scroll in various directions, pausing in-between:
   display.startscrollright(0x00, 0x0F);
@@ -106,9 +109,12 @@ void getblockheight() {
   // Draw scrolling text "Current Block Height"
   display.clearDisplay();
   display.setTextSize(1); // Draw 2X-scale text
+  display.setFont(&Bitwise9pt7b);
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 15);
-  display.println(F("Block Height"));
+  display.setCursor(0, 12);
+  display.println(F("Block"));
+  display.setCursor(0, 27);
+  display.println(F("Height"));
   display.display();      // Show text
   // Scroll to the right then left, pausing in-between:
   display.startscrollright(0x00, 0x0F);
@@ -177,9 +183,10 @@ void getblockstohalving() {
   display.clearDisplay();
   display.setTextSize(1); // Draw 2X-scale text
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 15);
+  display.setFont(&Bitwise9pt7b);
+  display.setCursor(0, 12);
   display.println(F("Blocks to "));
-  display.setCursor(0, 24);
+  display.setCursor(0, 27);
   display.println(F("next halving"));
   display.display();      // Show text
   // Scroll to the right then left, pausing in-between:
@@ -248,7 +255,7 @@ void setup() {
   display.display();      // Show text
   delay(100);
   /* Set the brightness min:1, max:15 */
-  ld.setBright(10);
+  ld.setBright(15);
   /* Set the digit count */
   ld.setDigitLimit(8);
   ld.printDigit(21000000);
@@ -264,7 +271,7 @@ void setup() {
   }
 
   WiFiManager wifiManager;
-  wifiManager.resetSettings(); // Clear the saved Wi-Fi credentials
+  //wifiManager.resetSettings(); // Clear the saved Wi-Fi credentials
   wifiManager.autoConnect("Bitcoinclock-0001");
   Serial.println("connected to wifi");
   
@@ -283,6 +290,8 @@ void setup() {
     delay(150);
   }
   ld.clear();
+  
+  //getbitcoinprice();
 
 }
 
